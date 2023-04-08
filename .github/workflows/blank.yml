@@ -1,25 +1,20 @@
-name: Create Archive
-on: [push]
+name: Build zip file
+on:
+  push:
+    branches: [main]
+
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
-    - name: pull latest and remove old file from repo
-      run: |
-        git config --global user.name "PetalCat"
-        git config --global user.email "phasenkamp27@gmail.com"
-        git config pull.rebase false
-        git pull
-        rm -f release.zip
-    - name: Archive Release
-      uses: PetalCat/zip-release@master
-      with:
-        filename: 'release.zip'
-        exclusions: '*.git* /*node_modules/* .editorconfig'
-    - name: push changes to remote
-      run: |
-        git add -A
-        git commit -m "new pack"
-        git push --force
+      - name: Checkout repository
+        uses: actions/checkout@v2
+      - name: Install zip
+        run: sudo apt-get install -y zip
+      - name: Build zip file
+        run: zip -r my-repo.zip .
+      - name: Upload artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: my-repo
+          path: my-repo.zip
