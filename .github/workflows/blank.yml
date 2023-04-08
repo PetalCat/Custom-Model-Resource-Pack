@@ -1,0 +1,20 @@
+name: Build zip file
+on:
+  push:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+      - name: Install zip
+        run: sudo apt-get install -y zip
+      - name: Build zip file
+        run: zip -r my-repo.zip .
+      - name: Upload artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: my-repo
+          path: my-repo.zip
